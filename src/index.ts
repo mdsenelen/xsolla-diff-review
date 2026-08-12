@@ -35,7 +35,7 @@ registerErrorHandling(app);
 registerAuth(app);
 registerRoutes(app);
 
-const PORT = process.env.PORT ?? '8080';
+const PORT = process.env.PORT ?? '3000';
 
 app.listen({ port: Number(PORT), host: '0.0.0.0' }).catch(() => {
   process.exit(1);
