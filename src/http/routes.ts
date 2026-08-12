@@ -8,7 +8,7 @@ import { checkIdempotency, computeBodyHash, recordIdempotency } from '../core/id
 import { chunkDiff } from '../core/chunk.js';
 import { normalizeFindings } from '../core/normalize.js';
 import { isParseableDiff } from '../core/parseDiff.js';
-import { mockProvider } from '../providers/mock.js';
+import { getProvider } from '../providers/index.js';
 import { sendError } from './errors.js';
 import { checkRateLimit } from './rateLimit.js';
 import { handleSseStream } from './sse.js';
@@ -18,12 +18,9 @@ const BEARER_PREFIX = 'Bearer ';
 async function processJob(job: Job): Promise<void> {
   try {
     setStatus(job, 'running');
-    if (job.options.provider === 'llm') {
-      failJob(job, { code: 'internal', message: 'llm provider is not implemented yet' });
-      return;
-    }
+    const provider = getProvider(job.options.provider);
     const chunks = chunkDiff(job.diff);
-    const rawFindings = await mockProvider.review(chunks, job.options);
+    const rawFindings = await provider.review(chunks, job.options);
     const full = normalizeFindings(rawFindings, Number.POSITIVE_INFINITY);
     const truncated = full.findings.slice(0, job.options.maxFindings);
     const usage = { inputBytes: job.usage.inputBytes, chunks: chunks.length, cacheHit: false, findingsTotal: full.findingsTotal };
