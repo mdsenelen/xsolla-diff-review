@@ -37,9 +37,14 @@ registerRoutes(app);
 
 const PORT = process.env.PORT ?? '3000';
 
-app.listen({ port: Number(PORT), host: '0.0.0.0' }).catch(() => {
-  process.exit(1);
-});
+app.listen({ port: Number(PORT), host: '0.0.0.0' })
+  .then(() => {
+    console.log(`Server listening on 0.0.0.0:${PORT}`);
+  })
+  .catch((err) => {
+    console.error('SERVER START ERROR:', err);
+    process.exit(1);
+  });
 
 async function shutdown(): Promise<void> {
   await app.close();
