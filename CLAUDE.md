@@ -255,7 +255,11 @@ line. Then walk forward through the remaining text of that line and subsequent
 `/* */` block comments. If the matching `}` is reached with no other token seen, emit
 the finding at the `catch` line. If the closing brace is not found within the added
 lines of that file, emit nothing. Context lines are deliberately not consulted, since
-the brief scopes all rules to added lines.
+the brief scopes all rules to added lines. The walk must never cross a `hunkIndex` or
+`path` boundary: `AddedLine.hunkIndex` (zero-based, per file, set by `parseDiff.ts`)
+scopes the walk to the same hunk as the `catch`, in addition to the same file — a
+`catch {` at the end of one hunk never continues into a later hunk's added lines, even
+within the same file.
 
 **D8 — MOCK-005.** Literal substring match, exactly as the brief words it. This means
 `=== null` also matches, because it contains `== null`. This is a deliberate fidelity
