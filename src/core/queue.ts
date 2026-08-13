@@ -5,7 +5,7 @@ export type JobProcessor = (job: Job) => Promise<void>;
 
 // Generic worker pool, no knowledge of diffs or jobStore — the caller's
 // processor is the only thing that touches job semantics.
-export function createQueue(process: JobProcessor): { enqueue(job: Job): void } {
+export function createQueue(processJob: JobProcessor): { enqueue(job: Job): void } {
   const pending: Job[] = [];
   let active = 0;
 
@@ -13,7 +13,7 @@ export function createQueue(process: JobProcessor): { enqueue(job: Job): void } 
     while (active < MAX_CONCURRENT_JOBS && pending.length > 0) {
       const job = pending.shift()!;
       active++;
-      process(job)
+      processJob(job)
         .catch(() => {})
         .finally(() => {
           active--;

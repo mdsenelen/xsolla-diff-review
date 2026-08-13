@@ -162,6 +162,10 @@ const mock004: Rule = {
   scan: scanMock004,
 };
 
+// D8 — literal substring match, exactly as specified. This deliberately also
+// matches `=== null` / `!== null`, since they contain `== null` / `!= null`
+// as substrings. That's the frozen contract, not a bug — do not tighten this
+// into a smarter regex.
 const mock005 = createContentRule(
   { ruleId: 'MOCK-005', severity: 'medium', category: 'correctness', title: 'loose null comparison' },
   (content) => content.includes('== null') || content.includes('!= null'),

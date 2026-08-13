@@ -22,8 +22,8 @@ async function processJob(job: Job): Promise<void> {
     const chunks = chunkDiff(job.diff);
     const rawFindings = await provider.review(chunks, job.options);
     const full = normalizeFindings(rawFindings, Number.POSITIVE_INFINITY);
-    const truncated = full.findings.slice(0, job.options.maxFindings);
-    const usage = { inputBytes: job.usage.inputBytes, chunks: chunks.length, cacheHit: false, findingsTotal: full.findingsTotal };
+    const { findings: truncated, findingsTotal } = normalizeFindings(full.findings, job.options.maxFindings);
+    const usage = { inputBytes: job.usage.inputBytes, chunks: chunks.length, cacheHit: false, findingsTotal };
     setCached(computeCacheKey(job.diff, job.options.provider, job.options.maxFindings), { findings: full.findings, inputBytes: usage.inputBytes, chunks: usage.chunks });
     completeJob(job, truncated, usage);
   } catch (err) {
