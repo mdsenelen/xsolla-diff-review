@@ -1,0 +1,21 @@
+# fly.toml app configuration file generated for xsolla-diff-review on 2026-08-12T21:33:04+02:00
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
+
+app = 'xsolla-diff-review'
+primary_region = 'fra'
+
+[build]
+[http_service]
+  internal_port = 3000
+  force_https = true
+  auto_stop_machines = false
+  auto_start_machines = true
+  min_machines_running = 1
+  processes = ['app']
+
+[[vm]]
+  memory = '1gb'
+  cpus = 1
+  memory_mb = 1024

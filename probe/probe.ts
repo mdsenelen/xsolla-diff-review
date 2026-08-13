@@ -1005,7 +1005,7 @@ testCase('stream on a fresh job receives status, finding, and done events in ord
 
   const final = await pollUntilTerminal(jobId);
   assertEqual(
-    findingEvents.map((e) => e.data?.id),
+    findingEvents.map((e) => e.data?.finding?.id),
     (final.findings as any[]).map((f) => f.id),
     'finding events must appear in the same canonical order as the final findings list',
   );
